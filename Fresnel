@@ -1,0 +1,38 @@
+close all
+clear all
+
+lx = 3; %Largo de rendija en X
+ly = 3; %Largo de rendija en Y
+
+A = 1; %Amplitud
+
+xlim = 6;
+ylim = 6;
+z = 3;
+%lambda =100000; %E-9;
+k = z*pi*(4/3)^2;
+
+x=[-xlim:0.05:xlim];
+y=[-ylim:0.05:ylim];
+
+intensidad = zeros(length(x));
+
+for i=1:length(x)
+for j=1:length(y)
+c1 = sqrt(k/(pi*z))*(lx/2 + x(i));
+c2 = -sqrt(k/(pi*z))*(lx/2 - x(i));
+n1 = sqrt(k/(pi*z))*(ly/2 + y(j));
+n2 = -sqrt(k/(pi*z))*(ly/2 - y(j));
+
+intensidad(i,j) = -(A*exp(1i*k*z)/2)*((fresnelC(c1) - fresnelC(c2)^2 + (fresnelS(c1) - fresnelS(c2))^2))*((fresnelC(n1) -fresnelC(n2))^2+(fresnelS(n1) - fresnelS(n2))^2);
+
+end
+end
+
+imagesc(abs(intensidad));
+title('Mapa de intensidades','FontSize',16);
+saveas(gcf,['6 - Mapa de intensidades'],'png')
+
+plot(x,abs(intensidad(101,:)));
+title('Intensidad a lo largo del eje X','FontSize',16);
+saveas(gcf,['8 - Intensidad en un eje'],'png')
